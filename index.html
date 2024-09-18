@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altitude et Position</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            text-align: center;
+            animation: backgroundAnimation 10s infinite alternate;
+        }
+        @keyframes backgroundAnimation {
+            0% { background: linear-gradient(to right, #6a11cb, #2575fc); }
+            100% { background: linear-gradient(to right, #ff7e5f, #feb47b); }
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 2s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            animation: textGlow 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px #fff; }
+            to { text-shadow: 0 0 20px #ff7e5f; }
+        }
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            animation: slideIn 1s ease-in-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .icon {
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            animation: rotate 2s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Altitude et Position</h1>
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/latitude.png" class="icon" alt="Latitude Icon">
+        <p id="latitude">Latitude: </p>
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/longitude.png" class="icon" alt="Longitude Icon">
+        <p id="longitude">Longitude: </p>
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/mountain.png" class="icon" alt="Altitude Icon">
+        <p id="altitude">Altitude: </p>
+    </div>
+
+    <script>
+        function showPosition(position) {
+            document.getElementById('latitude').innerHTML = "Latitude: " + position.coords.latitude;
+            document.getElementById('longitude').innerHTML = "Longitude: " + position.coords.longitude;
+            document.getElementById('altitude').innerHTML = "Altitude: " + (position.coords.altitude ? position.coords.altitude + " mètres" : "N/A");
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("L'utilisateur a refusé la demande de géolocalisation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Les informations de localisation ne sont pas disponibles.");
+                    break;
+                case error.TIMEOUT:
+                    alert("La demande de localisation a expiré.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Une erreur inconnue s'est produite.");
+                    break;
+            }
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("La géolocalisation n'est pas supportée par ce navigateur.");
+            }
+        }
+
+        setInterval(getLocation, 1000); // Actualise toutes les secondes
+
+        window.onload = getLocation;
+    </script>
+</body>
+</html>
